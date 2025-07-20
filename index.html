@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyBrowser: Interactive Project Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (Off-white/Beige, Charcoal Text, Muted Blue/Teal Accent) -->
+    <!-- Application Structure Plan: The linear presentation is transformed into a dynamic, non-linear interactive dashboard. A top navigation bar allows users to switch between themed sections (Overview, Tech Stack, Features, Roadmap) without scrolling. This prioritizes user-driven exploration. The "Features" section, the core of the report, is presented as a grid of interactive cards. Clicking a card opens a modal with details, making the content digestible and preventing information overload. This structure is more engaging than a static page and encourages users to explore the project's facets at their own pace. -->
+    <!-- Visualization & Content Choices: Since the report lacks numerical data, traditional charts are unsuitable. Instead, I've created conceptual visualizations. For 'Core Technologies', an HTML/CSS diagram shows the tech stack relationships (Goal: Organize). For 'Future Enhancements', a vertical timeline is used to present the project roadmap (Goal: Show Change). For 'Key Features', a grid of interactive cards with modals is used to let users explore each feature in detail (Goal: Inform/Compare). This approach transforms lists of text into engaging, interactive components, confirming NO SVG/Mermaid is used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+        .nav-btn.active {
+            background-color: #0891b2;
+            color: white;
+        }
+        .nav-btn:not(.active):hover {
+            background-color: #f1f5f9;
+        }
+        .feature-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            border: 4px solid #0891b2;
+        }
+        .timeline-line {
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #cbd5e1;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-cyan-700">PyBrowser</h1>
+            <p class="mt-2 text-lg text-slate-600">An Interactive Showcase of a Secure Web Browser Project</p>
+        </header>
+
+        <nav id="main-nav" class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 md:mb-12 sticky top-4 bg-white/80 backdrop-blur-sm p-2 rounded-xl shadow-sm z-10 border border-slate-200">
+            <button data-target="overview" class="nav-btn active text-sm sm:text-base font-medium py-2 px-4 rounded-lg">Introduction</button>
+            <button data-target="tech" class="nav-btn text-sm sm:text-base font-medium py-2 px-4 rounded-lg">Core Technologies</button>
+            <button data-target="features" class="nav-btn text-sm sm:text-base font-medium py-2 px-4 rounded-lg">Key Features</button>
+            <button data-target="security" class="nav-btn text-sm sm:text-base font-medium py-2 px-4 rounded-lg">Security</button>
+            <button data-target="roadmap" class="nav-btn text-sm sm:text-base font-medium py-2 px-4 rounded-lg">Future Roadmap</button>
+        </nav>
+
+        <main id="content-area" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-slate-200">
+
+            <section id="overview-content" class="content-section space-y-6">
+                 <h2 class="text-2xl font-bold text-cyan-700 border-b-2 border-cyan-100 pb-2">Project Introduction</h2>
+                 <p class="text-slate-600 leading-relaxed">This showcase presents PyBrowser, a functional and secure desktop web browser built from the ground up using Python and the powerful PyQt5 framework. The project's core philosophy is to prioritize user security by strictly enforcing HTTPS connections for all web traffic, ensuring a safer Browse experience.</p>
+                 <div class="grid md:grid-cols-2 gap-6 pt-4">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h3 class="font-semibold text-lg text-slate-700">Project Goals</h3>
+                        <ul class="mt-2 list-disc list-inside text-slate-600 space-y-1">
+                            <li>Demonstrate desktop application development.</li>
+                            <li>Explore common features of modern browsers.</li>
+                            <li>Highlight the importance of secure communication.</li>
+                        </ul>
+                    </div>
+                     <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                        <h3 class="font-semibold text-lg text-slate-700">Why PyBrowser?</h3>
+                        <p class="mt-2 text-slate-600">This project serves as a practical example of integrating complex web technologies within a native desktop application, providing a tangible platform to learn about UI/UX design, application logic, and web security principles.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tech-content" class="content-section hidden">
+                <h2 class="text-2xl font-bold text-cyan-700 border-b-2 border-cyan-100 pb-2">Core Technology Stack</h2>
+                <p class="text-slate-600 leading-relaxed my-6">PyBrowser is built on a foundation of robust and widely-used open-source technologies. The relationship between these components allows for the creation of a feature-rich desktop application with full web Browse capabilities. Hover over a component below to see its role in the project.</p>
+
+                <div class="flex flex-col items-center justify-center space-y-4">
+                    <div class="tech-card bg-cyan-600 text-white p-4 rounded-xl shadow-lg w-full max-w-sm text-center">
+                        <h3 class="text-xl font-bold">PyBrowser</h3>
+                    </div>
+                    <div class="w-px h-8 bg-slate-300"></div>
+                    <div class="w-full flex justify-center">
+                        <div class="w-1/2 h-px bg-slate-300"></div>
+                    </div>
+                    <div class="w-full grid md:grid-cols-3 gap-8 text-center pt-4">
+                        <div class="tech-group">
+                            <div class="tech-card bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                                <h4 class="font-bold text-lg text-cyan-700">Python</h4>
+                                <p class="text-sm text-slate-500 mt-2">The primary programming language providing the core logic and structure of the application.</p>
+                            </div>
+                        </div>
+                        <div class="tech-group">
+                             <div class="tech-card bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                                <h4 class="font-bold text-lg text-cyan-700">PyQt5</h4>
+                                <p class="text-sm text-slate-500 mt-2">A comprehensive framework for creating the native desktop UI, including windows, buttons, and menus.</p>
+                            </div>
+                        </div>
+                        <div class="tech-group">
+                            <div class="tech-card bg-white p-6 rounded-xl shadow-md border border-slate-200">
+                                <h4 class="font-bold text-lg text-cyan-700">PyQtWebEngine</h4>
+                                <p class="text-sm text-slate-500 mt-2">Integrates Chromium's engine, enabling the rendering of web pages, JavaScript execution, and modern web features.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features-content" class="content-section hidden">
+                <h2 class="text-2xl font-bold text-cyan-700 border-b-2 border-cyan-100 pb-2">Interactive Feature Explorer</h2>
+                <p class="text-slate-600 leading-relaxed my-6">PyBrowser is equipped with a range of features that define a modern Browse experience, from fundamental security protocols to advanced user tools. Click on any feature card below to learn more about its benefits and implementation details.</p>
+
+                <div class="space-y-8">
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-700 mb-4">Security & Navigation</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="feature-card" data-title="HTTPS-Only Enforcement" data-benefit="Enhances security by ensuring all traffic is encrypted, protecting against eavesdropping and tampering." data-implementation="Implemented by overriding the `acceptNavigationRequest` method in a custom `HttpsOnlyWebEngineView` class to block any URL not using the 'https://' scheme.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">HTTPS-Only Enforcement</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Blocks all non-secure HTTP connections automatically.</p>
+                                </div>
+                            </div>
+                             <div class="feature-card" data-title="Tabbed Browse" data-benefit="Allows users to manage multiple web pages simultaneously, improving organization and workflow." data-implementation="The `QTabWidget` is used to create and manage the tab bar. A custom `BrowserTab` QWidget contains each `QWebEngineView` instance, allowing for independent pages.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Tabbed Browse</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Open and manage multiple web pages in separate tabs.</p>
+                                </div>
+                            </div>
+                            <div class="feature-card" data-title="Navigation Controls" data-benefit="Provides a standard and intuitive way for users to move between web pages within a tab's session history." data-implementation="`QAction` objects (Back, Forward, Reload, Home) are added to a `QToolBar` and connected to the `QWebEngineView`'s built-in navigation methods like `.back()`, `.forward()`, and `.reload()`.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Navigation Controls</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Standard 'Back', 'Forward', 'Reload', and 'Home' buttons.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="text-xl font-semibold text-slate-700 mb-4">User Experience</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                             <div class="feature-card" data-title="Smart URL Bar & Search" data-benefit="Creates a seamless experience where the user doesn't have to distinguish between navigating to a site and searching the web." data-implementation="The `QLineEdit` for the URL bar triggers a function that checks if the input text resembles a URL. If not, it prepends the query to a configurable search engine URL.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Smart URL Bar & Search</h4>
+                                    <p class="text-sm text-slate-500 mt-2">A single bar for both web addresses and search queries.</p>
+                                </div>
+                            </div>
+                             <div class="feature-card" data-title="Bookmarks & History" data-benefit="Personalizes the Browse experience and allows for easy revisiting of frequently used or previously viewed sites." data-implementation="Bookmarks and history lists are stored in local `bookmarks.json` and `history.json` files. These files are read on startup and written to whenever a change is made, ensuring data persists across sessions.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Bookmarks & History</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Save favorite sites and track your Browse history.</p>
+                                </div>
+                            </div>
+                             <div class="feature-card" data-title="Progress Bar & Favicons" data-benefit="Provides crucial visual feedback, assuring the user that content is loading and making tabs easily identifiable at a glance." data-implementation="A `QProgressBar` in the `QStatusBar` is connected to the `loadProgress` signal. The tab's icon is updated by connecting to the `iconChanged` signal of the `QWebEngineView`.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Loading Progress & Favicons</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Visual feedback with a loading bar and website icons.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div>
+                        <h3 class="text-xl font-semibold text-slate-700 mb-4">Advanced Functionality</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div class="feature-card" data-title="HTTPS Lock Icon" data-benefit="Gives users a quick, universally understood visual confirmation of a website's security status, building trust." data-implementation="A `QAction` with an icon is placed next to the URL bar. Its icon is dynamically updated based on the `url.scheme()` of the current page whenever the URL changes.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">HTTPS Lock Icon</h4>
+                                    <p class="text-sm text-slate-500 mt-2">A visual indicator in the URL bar for secure connections.</p>
+                                </div>
+                            </div>
+                             <div class="feature-card" data-title="Context Menu" data-benefit="Improves interactivity and efficiency by providing quick access to common actions like opening links, copying text, and inspecting elements." data-implementation="The default context menu is overridden by handling the `contextMenuEvent`. A custom `QMenu` is created and populated with relevant `QAction`s based on the context of the click.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Context Menu</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Right-click for actions like 'Open in New Tab' and 'Inspect'.</p>
+                                </div>
+                            </div>
+                             <div class="feature-card" data-title="Developer Tools & User Agent" data-benefit="Essential for web developers for debugging websites and for power users who need to test how sites respond to different browsers." data-implementation="Developer Tools are triggered via `QWebEnginePage.OpenDevToolsPage`. The User Agent is modified by calling `QWebEngineProfile.setHttpUserAgent()`.">
+                                <div class="bg-white p-6 rounded-lg shadow-md border border-slate-200 h-full">
+                                    <h4 class="font-bold text-cyan-700">Developer Tools & User Agent</h4>
+                                    <p class="text-sm text-slate-500 mt-2">Access web inspection tools and customize the user agent.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="security-content" class="content-section hidden">
+                <h2 class="text-2xl font-bold text-cyan-700 border-b-2 border-cyan-100 pb-2">Security & Best Practices</h2>
+                <p class="text-slate-600 leading-relaxed my-6">Security is the cornerstone of the PyBrowser project. The following principles and practices are implemented to ensure a safer and more reliable user experience.</p>
+                 <ul class="space-y-4">
+                    <li class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">🛡️</div>
+                        <div>
+                            <h3 class="font-semibold">HTTPS-Only Communication</h3>
+                            <p class="text-slate-500">The primary security measure. By blocking unencrypted HTTP traffic, PyBrowser protects user data from being intercepted on insecure networks.</p>
+                        </div>
+                    </li>
+                     <li class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">📦</div>
+                        <div>
+                            <h3 class="font-semibold">Persistent Data with JSON</h3>
+                            <p class="text-slate-500">User data such as bookmarks, history, and settings are saved locally in a human-readable JSON format, giving users control and transparency over their data.</p>
+                        </div>
+                    </li>
+                     <li class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold">⚙️</div>
+                        <div>
+                            <h3 class="font-semibold">Robust Error Handling</h3>
+                            <p class="text-slate-500">Navigation and file operations are wrapped in `try-except` blocks to gracefully handle issues like invalid URLs or corrupted data files, preventing application crashes.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+            
+            <section id="roadmap-content" class="content-section hidden">
+                 <h2 class="text-2xl font-bold text-cyan-700 border-b-2 border-cyan-100 pb-2">Future Enhancements Roadmap</h2>
+                 <p class="text-slate-600 leading-relaxed my-6">PyBrowser is a foundational project with significant potential for growth. The following roadmap outlines planned features that will further enhance its functionality, security, and user experience.</p>
+                 <div class="relative pl-8">
+                     <div class="timeline-line"></div>
+                     <div class="space-y-12">
+                         <div class="relative timeline-item">
+                             <h3 class="font-semibold text-lg">Ad Blocker & Content Filtering</h3>
+                             <p class="text-slate-500 mt-1">Integrate a content filtering system to block advertisements and trackers for a cleaner, faster, and more private Browse experience.</p>
+                         </div>
+                         <div class="relative timeline-item">
+                             <h3 class="font-semibold text-lg">Incognito / Private Browse Mode</h3>
+                             <p class="text-slate-500 mt-1">Implement a private Browse mode that does not save history, cookies, or site data, ensuring user privacy for sensitive sessions.</p>
+                         </div>
+                         <div class="relative timeline-item">
+                             <h3 class="font-semibold text-lg">Robust Download Manager</h3>
+                             <p class="text-slate-500 mt-1">Expand the current download functionality to include progress details, pause/resume capabilities, and custom save locations.</p>
+                         </div>
+                         <div class="relative timeline-item">
+                            <h3 class="font-semibold text-lg">Cookie Management</h3>
+                            <p class="text-slate-500 mt-1">Provide a user interface to view, search, and delete cookies on a per-site or global basis, giving users more control over their data.</p>
+                        </div>
+                         <div class="relative timeline-item">
+                             <h3 class="font-semibold text-lg">Theming and Customization</h3>
+                             <p class="text-slate-500 mt-1">Allow users to personalize the browser's appearance with different color themes and layout options.</p>
+                         </div>
+                     </div>
+                 </div>
+            </section>
+
+        </main>
+        
+        <footer class="text-center mt-8 md:mt-12 text-slate-500 text-sm">
+            <p>PyBrowser demonstrates the power of Python and PyQt5 in building modern desktop applications.</p>
+            <p>This interactive showcase was generated on July 20, 2025.</p>
+        </footer>
+    </div>
+
+    <div id="feature-modal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl transform scale-95 transition-transform duration-300">
+            <div class="p-6 sm:p-8">
+                <div class="flex justify-between items-center border-b border-slate-200 pb-4 mb-4">
+                    <h3 id="modal-title" class="text-2xl font-bold text-cyan-700"></h3>
+                    <button id="modal-close-btn" class="text-slate-400 hover:text-slate-700 transition-colors">&times;</button>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="font-semibold text-slate-500 uppercase text-sm tracking-wider">Benefit</h4>
+                        <p id="modal-benefit" class="mt-2 text-slate-600 leading-relaxed"></p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-500 uppercase text-sm tracking-wider">Implementation</h4>
+                        <p id="modal-implementation" class="mt-2 text-slate-600 leading-relaxed font-mono text-sm bg-slate-50 p-4 rounded-md border border-slate-200"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('#main-nav button');
+            const contentSections = document.querySelectorAll('.content-section');
+            const featureCards = document.querySelectorAll('.feature-card');
+            const modal = document.getElementById('feature-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBenefit = document.getElementById('modal-benefit');
+            const modalImplementation = document.getElementById('modal-implementation');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalContent = modal.querySelector('div > div');
+
+            function showSection(targetId) {
+                contentSections.forEach(section => {
+                    section.classList.toggle('hidden', section.id !== `${targetId}-content`);
+                });
+                navButtons.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.target === targetId);
+                });
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showSection(button.dataset.target);
+                });
+            });
+
+            featureCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    modalTitle.textContent = card.dataset.title;
+                    modalBenefit.textContent = card.dataset.benefit;
+                    modalImplementation.textContent = card.dataset.implementation;
+                    modal.classList.remove('opacity-0', 'pointer-events-none');
+                    modalContent.classList.remove('scale-95');
+                    modalContent.classList.add('scale-100');
+                });
+            });
+
+            function closeModal() {
+                modalContent.classList.add('scale-95');
+                modal.classList.add('opacity-0');
+                setTimeout(() => {
+                   modal.classList.add('pointer-events-none');
+                }, 300);
+            }
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            showSection('overview');
+        });
+    </script>
+</body>
+</html>
